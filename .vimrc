@@ -50,10 +50,12 @@ set whichwrap+=<,>,h,l
 "autocmd FileType php set omnifunc=phpcomplete
 " Solarized Colorscheme for Vim"
 set t_Co=256
-colorscheme solarized
+"colorscheme solarized
+colorscheme molokai
 set background=dark
 "highlight Normal ctermfg=1 ctermbg=1
 let g:solarized_termcolors=256
+let g:molokai_original = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 搜索和匹配
@@ -67,11 +69,32 @@ let g:solarized_termcolors=256
 " 在搜索的时候忽略大小写
 set ignorecase
 
-" 不要高亮被搜索的句子（phrases
-" set nohlsearch
+" 不要高亮被搜索的句子
+"set nohlsearch
 
 " 在搜索时，输入的词句的逐字符高亮（类似firefox的搜索
 set incsearch 
+
+"autocmd! CursorHold,CursorHoldI * let @/='\<'.expand('<cword>').'\>'
+nnoremap <Leader>z :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
+function! AutoHighlightToggle()
+	let @/ = ''
+	if exists('#auto_highlight')
+		au! auto_highlight
+		augroup! auto_highlight
+		setl updatetime=4000
+		echo 'Highlight current word: off'
+		return 0
+	else
+		augroup auto_highlight
+		au!
+		au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
+		augroup end
+		setl updatetime=50
+		echo 'Highlight current word: ON'
+		return 1
+	endif
+endfunction
 
 " 输入:set list命令是应该显示些啥
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ 
@@ -89,7 +112,7 @@ set statusline=%F%m%r%h%w\[POS=%l,%v][%p%%]\%{strftime(\"%d/%m/%y\ -\%H:%M\")}
 " 文本格式和排版
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 自动格式化
-set formatoptions=tcrqn
+"set formatoptions=tcrqn
 
 " 继承前一行的缩进方式，特别适用于多行注释
 set autoindent
@@ -108,7 +131,8 @@ set softtabstop=4
 set shiftwidth=4
 
 " 不要用空格代替制表符
-set noexpandtab
+"set noexpandtab
+set expandtab
 
 " 不要换行
 set nowrap 
@@ -177,6 +201,8 @@ Plugin 'ternjs/tern_for_vim'
 
 Plugin 'jelera/vim-javascript-syntax'
 
+Plugin 'octol/vim-cpp-enhanced-highlight'
+
 Plugin 'nathanaelkane/vim-indent-guides'
 
 Plugin 'Raimondi/delimitMate'
@@ -209,6 +235,26 @@ Plugin 'xolox/vim-misc'
 
 Plugin 'tpope/vim-surround'
 
+Plugin 'terryma/vim-expand-region'
+
+Plugin 'hynek/vim-python-pep8-indent'
+
+Plugin 'ntpeters/vim-better-whitespace'
+
+Plugin 'Chiel92/vim-autoformat'
+
+"Plugin 'MarcWeber/vim-addon-mw-utils'
+
+"Plugin 'tomtom/tlib_vim'
+
+"Plugin 'garbas/vim-snipmate'
+
+Plugin 'SirVer/ultisnips'
+
+Plugin 'honza/vim-snippets'
+
+Plugin 'dkprice/vim-easygrep'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -234,7 +280,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 noremap <Leader>nf :NERDTreeFind<CR>
 let g:NERDTreeWinSize = 37
 let g:NERDTreeChDirMode=2
-let g:NERDTreeShowBookmarks=1 
+let g:NERDTreeShowBookmarks=1
 let g:NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
 
 " CtrlP
@@ -268,8 +314,13 @@ let g:ctrlp_follow_symlinks=1
 let g:ctrlp_lazy_update = 1
 
 " CtrlP-funky
-nnoremap <Leader>fu :CtrlPFunky<Cr>
+nnoremap ƒ :CtrlPFunky<CR>
 let g:ctrlp_extensions = ['funky']
+let g:ctrlp_funky_use_cache = 1
+let g:ctrlp_funky_syntax_highlight = 0
+let g:ctrlp_funky_nolim = 0
+let g:ctrlp_funky_multi_buffers = 1
+"let g:ctrlp_funky_after_jump = 'zz'
 
 " CtrlP-tjump
 let g:ctrlp_tjump_only_silent = 1
@@ -282,12 +333,22 @@ map <silent> <F9> :TagbarToggle<CR>
 set tags=tags
 let g:tagbar_ctags_bin = 'ctags'
 let g:Tagbar_autofocus = 1
+let g:tagbar_type_javascript = {
+    \ 'ctagstype' : 'JavaScript',
+    \ 'kinds'     : [
+        \ 'o:objects',
+        \ 'f:functions',
+        \ 'a:arrays',
+        \ 's:strings'
+    \ ]
+\ }
 
 " YouCompleteMe
 let g:ycm_add_preview_to_completeopt=0
+let g:ycm_autoclose_preview_window_after_completion = 1
 "let g:ycm_key_invoke_completion = '<Enter>'
 let g:ycm_confirm_extra_conf=0
-"set completeopt-=preview
+set completeopt-=preview
 let g:ycm_filetype_blacklist = {
 	\ 'tagbar' : 1,
 	\ 'qf' : 1,
@@ -308,15 +369,15 @@ nnoremap <Leader>fg :Ag<Space>
 " MiniBufExp
 let g:miniBufExplHideWhenDiff = 1
 let g:miniBufExplorerAutoStart = 0
-noremap <TAB> :MBEbn<CR>
-noremap <S-TAB> :MBEbp<CR>
-noremap <Leader>bd :MBEbd<CR>
+nnoremap <TAB> :MBEbn<CR>
+nnoremap <S-TAB> :MBEbp<CR>
+nnoremap <Leader>bd :MBEbd<CR>
 map <silent> <F11> :MBEToggle<CR>
 
 " SVNJ
 nnoremap <Leader>st :SVNStatus<CR>
 nnoremap <Leader>df :SVNDiff<CR>
-nnoremap <Leader>sl :SVNLog<CR>
+nnoremap <Leader>svl :SVNLog<CR>
 nnoremap <silent> <Leader>dc <Esc><C-w>h:diffoff!<CR>:bd!<CR>:GoSVNJ<CR>
 let g:svnj_fuzzy_search = 0
 
@@ -327,13 +388,27 @@ let g:session_autoload = 'yes'
 "delimitMate
 let delimitMate_expand_cr = 1
 
+" Underline
+let g:UltiSnipsExpandTrigger = "<C-e>"
+"let g:UltiSnipsListSnippets = "<C-n>"
+let g:UltiSnipsJumpForwardTrigger = "<C-m>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-b>"
+"let g:ulti_expand_or_jump_res = 0 "default value, just set once
+"function! Ulti_ExpandOrJump_and_getRes()
+    "call UltiSnips#ExpandSnippetOrJump()
+    "return g:ulti_expand_or_jump_res
+"endfunction
+"inoremap <C-m> <C-R>=(Ulti_ExpandOrJump_and_getRes() > 0)?"":IMAP_Jumpfunc('', 0)<CR>
+
 " map
 inoremap <C-h> <left>
 inoremap <C-j> <down>
 inoremap <C-k> <up>
 inoremap <C-l> <right>
-nnoremap <Leader>s :w<CR> 
-nnoremap <Leader>q :call Close()<CR> 
+inoremap ∆ <Esc>o
+nnoremap <Leader>s :w<CR>
+nnoremap <Leader>q :call Close()<CR>
+nnoremap ç :QFix<CR>
 nnoremap ∑ :MBEbd<CR>
 nnoremap ¡ :b1<CR>
 nnoremap ™ :b2<CR>
@@ -355,5 +430,20 @@ func Close()
 	exe ":q!"
 endfunc
 
+command -bang -nargs=? QFix call QFixToggle(<bang>0)
+function! QFixToggle(forced)
+    if exists("g:qfix_win") && a:forced == 0
+        cclose
+    else
+        execute "copen"
+    endif
+endfunction
+augroup QFixToggle
+    autocmd!
+    autocmd BufWinEnter quickfix let g:qfix_win = bufnr("$")
+    autocmd BufWinLeave * if exists("g:qfix_win") && expand("<abuf>") == g:qfix_win | unlet! g:qfix_win | endif
+augroup END
+
 " colors
 highlight Yellow ctermfg=172
+highlight Underline cterm=underline 
