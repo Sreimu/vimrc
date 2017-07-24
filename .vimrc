@@ -19,13 +19,13 @@ set history=100
 " 与windows共享剪贴板
 " set clipboard+=unnamed
 
-" 侦测文件类型 
+" 侦测文件类型
 "filetype on
 
-" 载入文件类型插件 
+" 载入文件类型插件
 "filetype plugin on
 
-" 为特定文件类型载入相关缩进文件 
+" 为特定文件类型载入相关缩进文件
 "filetype indent on
 
 " 带有如下符号的单词不要被换行分割
@@ -73,7 +73,7 @@ set ignorecase
 "set nohlsearch
 
 " 在搜索时，输入的词句的逐字符高亮（类似firefox的搜索
-set incsearch 
+set incsearch
 
 "autocmd! CursorHold,CursorHoldI * let @/='\<'.expand('<cword>').'\>'
 nnoremap <Leader>z :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
@@ -97,7 +97,7 @@ function! AutoHighlightToggle()
 endfunction
 
 " 输入:set list命令是应该显示些啥
-set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ 
+set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$
 
 " 光标移动到buffer的顶部和底部时保持3行距离
 set scrolloff=3
@@ -163,14 +163,14 @@ Plugin 'VundleVim/Vundle.vim'
 " plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
 " plugin from http://vim-scripts.org/vim/scripts.html
-Plugin 'L9'
+"Plugin 'L9'
 " Git plugin not hosted on GitHub
 Plugin 'git://git.wincent.com/command-t.git'
 " git repos on your local machine (i.e. when working on your own plugin)
 " Plugin 'file:///home/gmarik/path/to/plugin'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 " Avoid a name conflict with L9
 " Plugin 'user/L9', {'name': 'newL9'}
 
@@ -191,15 +191,15 @@ Plugin 'ivalkeen/vim-ctrlp-tjump'
 
 Plugin 'majutsushi/tagbar'
 
-Plugin 'pangloss/vim-javascript'
+"Plugin 'pangloss/vim-javascript'
 
 Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'scrooloose/syntastic'
 
-Plugin 'ternjs/tern_for_vim'
+"Plugin 'ternjs/tern_for_vim'
 
-Plugin 'jelera/vim-javascript-syntax'
+"Plugin 'jelera/vim-javascript-syntax'
 
 Plugin 'octol/vim-cpp-enhanced-highlight'
 
@@ -211,9 +211,9 @@ Plugin 'maksimr/vim-jsbeautify'
 
 "Plugin 'mileszs/ack.vim'
 
-Plugin 'rking/ag.vim'
+"Plugin 'rking/ag.vim'
 
-Plugin 'juneedahamed/svnj.vim'
+"Plugin 'juneedahamed/svnj.vim'
 
 Plugin 'fholgado/minibufexpl.vim'
 
@@ -274,6 +274,20 @@ filetype plugin on
 set laststatus=2
 let g:Powline_symbols='fancy'
 
+"syntastic
+let g:syntastic_enable_signs = 1
+let g:syntastic_error_symbol = "\u2717"
+let g:syntastic_warning_symbol = "\u26A0"
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 " NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 :map <silent> <F10> :NERDTreeToggle<CR>
@@ -289,7 +303,7 @@ map <Leader>ft :CtrlPTag<CR>
 map π :CtrlPBuffer<CR>
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-let g:ctrlp_working_path_mode = 0
+let g:ctrlp_working_path_mode = 'ca'
 let g:ctrlp_regexp = 1
 "let g:ctrlp_user_command = 'find %s -type f'
 let g:ctrlp_by_filename = 1
@@ -303,7 +317,6 @@ let g:ctrlp_custom_ignore = {
 			\ }
 "let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
-let g:ctrlp_working_path_mode=0
 let g:ctrlp_match_window_bottom=1
 "let g:ctrlp_max_height=15
 let g:ctrlp_match_window = 'results:20'
@@ -346,7 +359,8 @@ let g:tagbar_type_javascript = {
 " YouCompleteMe
 let g:ycm_add_preview_to_completeopt=0
 let g:ycm_autoclose_preview_window_after_completion = 1
-"let g:ycm_key_invoke_completion = '<Enter>'
+"let g:ycm_key_invoke_completion = '<C-c>'
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf=0
 set completeopt-=preview
 let g:ycm_filetype_blacklist = {
@@ -375,15 +389,15 @@ nnoremap <Leader>bd :MBEbd<CR>
 map <silent> <F11> :MBEToggle<CR>
 
 " SVNJ
-nnoremap <Leader>st :SVNStatus<CR>
-nnoremap <Leader>df :SVNDiff<CR>
-nnoremap <Leader>svl :SVNLog<CR>
-nnoremap <silent> <Leader>dc <Esc><C-w>h:diffoff!<CR>:bd!<CR>:GoSVNJ<CR>
-let g:svnj_fuzzy_search = 0
+"nnoremap <Leader>st :SVNStatus<CR>
+"nnoremap <Leader>df :SVNDiff<CR>
+"nnoremap <Leader>svl :SVNLog<CR>
+"nnoremap <silent> <Leader>dc <Esc><C-w>h:diffoff!<CR>:bd!<CR>:GoSVNJ<CR>
+"let g:svnj_fuzzy_search = 0
 
 " Session
 let g:session_autosave = 'yes'
-let g:session_autoload = 'yes'
+let g:session_autoload = 'no'
 
 "delimitMate
 let delimitMate_expand_cr = 1
