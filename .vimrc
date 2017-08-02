@@ -72,28 +72,30 @@ set ignorecase
 " 不要高亮被搜索的句子
 "set nohlsearch
 
+set grepprg=ag\ --nogroup\ --nocolor
+
 " 在搜索时，输入的词句的逐字符高亮（类似firefox的搜索
 set incsearch
 
 "autocmd! CursorHold,CursorHoldI * let @/='\<'.expand('<cword>').'\>'
 nnoremap <Leader>z :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
 function! AutoHighlightToggle()
-	let @/ = ''
-	if exists('#auto_highlight')
-		au! auto_highlight
-		augroup! auto_highlight
-		setl updatetime=4000
-		echo 'Highlight current word: off'
-		return 0
-	else
-		augroup auto_highlight
-		au!
-		au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
-		augroup end
-		setl updatetime=50
-		echo 'Highlight current word: ON'
-		return 1
-	endif
+    let @/ = ''
+    if exists('#auto_highlight')
+        au! auto_highlight
+        augroup! auto_highlight
+        setl updatetime=4000
+        echo 'Highlight current word: off'
+        return 0
+    else
+        augroup auto_highlight
+        au!
+        au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
+        augroup end
+        setl updatetime=50
+        echo 'Highlight current word: ON'
+        return 1
+    endif
 endfunction
 
 " 输入:set list命令是应该显示些啥
@@ -135,7 +137,7 @@ set shiftwidth=4
 set expandtab
 
 " 不要换行
-set nowrap 
+set nowrap
 
 " 在行和段开始处使用制表符
 set smarttab
@@ -175,7 +177,9 @@ Plugin 'git://git.wincent.com/command-t.git'
 " Plugin 'user/L9', {'name': 'newL9'}
 
 "PowerLine插件 状态栏增强展示
-Plugin 'Lokaltog/vim-powerline'
+"Plugin 'Lokaltog/vim-powerline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 "vim有一个状态栏 加上powline则有两个状态栏
 
 "NERDTree文件系统
@@ -195,7 +199,7 @@ Plugin 'majutsushi/tagbar'
 
 Plugin 'Valloric/YouCompleteMe'
 
-Plugin 'scrooloose/syntastic'
+Plugin 'vim-syntastic/syntastic'
 
 "Plugin 'ternjs/tern_for_vim'
 
@@ -207,11 +211,11 @@ Plugin 'nathanaelkane/vim-indent-guides'
 
 Plugin 'Raimondi/delimitMate'
 
-Plugin 'maksimr/vim-jsbeautify'
+"Plugin 'maksimr/vim-jsbeautify'
 
 "Plugin 'mileszs/ack.vim'
 
-"Plugin 'rking/ag.vim'
+Plugin 'rking/ag.vim'
 
 "Plugin 'juneedahamed/svnj.vim'
 
@@ -253,7 +257,17 @@ Plugin 'SirVer/ultisnips'
 
 Plugin 'honza/vim-snippets'
 
-Plugin 'dkprice/vim-easygrep'
+"Plugin 'dkprice/vim-easygrep'
+
+Plugin 'Chun-Yang/vim-action-ag'
+
+Plugin 'xolox/vim-lua-ftplugin'
+
+"Plugin 'xolox/vim-lua-inspect'
+
+Plugin 'xolox/vim-easytags'
+
+Plugin 'WolfgangMehner/lua-support'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -271,8 +285,11 @@ filetype plugin on
 " Put your non-Plugin stuff after this line
 
 "PowerLine
-set laststatus=2
-let g:Powline_symbols='fancy'
+"set laststatus=2
+"let g:Powline_symbols='fancy'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme = 'solarized'
+let g:airline_solarized_bg = 'dark'
 
 "syntastic
 let g:syntastic_enable_signs = 1
@@ -305,16 +322,16 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
 let g:ctrlp_working_path_mode = 'ca'
 let g:ctrlp_regexp = 1
-"let g:ctrlp_user_command = 'find %s -type f'
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 let g:ctrlp_by_filename = 1
 "let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|framwork)$'
 let g:ctrlp_show_hidden = 0
 "map <leader>fp :CtrlPMRU<CR>
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
 let g:ctrlp_custom_ignore = {
-			\ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-			\ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz)$',
-			\ }
+            \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+            \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz)$',
+            \ }
 "let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
 let g:ctrlp_match_window_bottom=1
@@ -364,29 +381,33 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 let g:ycm_confirm_extra_conf=0
 set completeopt-=preview
 let g:ycm_filetype_blacklist = {
-	\ 'tagbar' : 1,
-	\ 'qf' : 1,
-	\ 'notes' : 1,
-	\ 'markdown' : 1,
-	\ 'unite' : 1,
-	\ 'text' : 1,
-	\ 'vimwiki' : 1,
-	\ 'gitcommit' : 1,
+    \ 'tagbar' : 1,
+    \ 'qf' : 1,
+    \ 'notes' : 1,
+    \ 'markdown' : 1,
+    \ 'unite' : 1,
+    \ 'text' : 1,
+    \ 'vimwiki' : 1,
+    \ 'gitcommit' : 1,
 \}
 
 " You might not want this, so just leave it out if you don't.
 let g:syntastic_check_on_open=1
 
-" Ack
+let lua_version = 5
+let lua_subversion = 1
+
+"ag
 nnoremap <Leader>fg :Ag<Space>
 
 " MiniBufExp
 let g:miniBufExplHideWhenDiff = 1
 let g:miniBufExplorerAutoStart = 0
-nnoremap <TAB> :MBEbn<CR>
-nnoremap <S-TAB> :MBEbp<CR>
+nnoremap <C-}> :MBEbn<CR>
+nnoremap <C-{> :MBEbp<CR>
 nnoremap <Leader>bd :MBEbd<CR>
 map <silent> <F11> :MBEToggle<CR>
+let g:miniBufExplCycleArround = 1
 
 " SVNJ
 "nnoremap <Leader>st :SVNStatus<CR>
@@ -401,6 +422,7 @@ let g:session_autoload = 'no'
 
 "delimitMate
 let delimitMate_expand_cr = 1
+let delimitMateSmartQuotes = 1
 
 " Underline
 let g:UltiSnipsExpandTrigger = "<C-e>"
@@ -414,7 +436,21 @@ let g:UltiSnipsJumpBackwardTrigger = "<C-b>"
 "endfunction
 "inoremap <C-m> <C-R>=(Ulti_ExpandOrJump_and_getRes() > 0)?"":IMAP_Jumpfunc('', 0)<CR>
 
+"lua inspect
+"let g:loaded_luainspect = 0
+let g:lua_inspect_warnings = 0
+
+"lua-support
+let g:Lua_OutputMethod = 'vim-qf'
+
+"easytag
+
+"easygrep
+let g:EasyGrepCommand = 1
+let g:GrepProgram = 'ag'
+
 " map
+imap <S-CR> <ESC>o
 inoremap <C-h> <left>
 inoremap <C-j> <down>
 inoremap <C-k> <up>
@@ -436,12 +472,12 @@ nnoremap ª :b9<CR>
 "nnoremap <ESC> <ESC><ESC>
 
 " autocmd
-autocmd VimLeave * call Close() 
+autocmd VimLeave * call Close()
 func Close()
-	if exists(':NERDTreeClose')
-		exe "NERDTreeClose"
-	endif
-	exe ":q!"
+    if exists(':NERDTreeClose')
+        exe "NERDTreeClose"
+    endif
+    exe ":q!"
 endfunc
 
 command -bang -nargs=? QFix call QFixToggle(<bang>0)
@@ -460,4 +496,4 @@ augroup END
 
 " colors
 highlight Yellow ctermfg=172
-highlight Underline cterm=underline 
+highlight Underline cterm=underline
