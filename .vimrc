@@ -229,7 +229,7 @@ Plugin 'easymotion/vim-easymotion'
 
 Plugin 'mhinz/vim-signify'
 
-Plugin 'scrooloose/nerdcommenter'
+"Plugin 'scrooloose/nerdcommenter'
 
 Plugin 'juneedahamed/vc.vim'
 
@@ -261,7 +261,7 @@ Plugin 'honza/vim-snippets'
 
 Plugin 'Chun-Yang/vim-action-ag'
 
-Plugin 'xolox/vim-lua-ftplugin'
+"Plugin 'xolox/vim-lua-ftplugin'
 
 "Plugin 'xolox/vim-lua-inspect'
 
@@ -441,7 +441,8 @@ let g:UltiSnipsJumpBackwardTrigger = "<C-b>"
 let g:lua_inspect_warnings = 0
 
 "lua-support
-let g:Lua_OutputMethod = 'vim-qf'
+let g:Lua_OutputMethod = 'quickfix'
+let g:Lua_Ctrl_j = 'no'
 
 "easytag
 
